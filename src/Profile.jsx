@@ -272,8 +272,9 @@ if (saved && editing) {
   }
 
   return (
-    <div className="profile-page">
-      <div></div> className="profile-container"
+    
+  <div className="profile-page">
+    <div className="profile-container"></div>
 
         <button className="back-button" onClick={onBack}>
           <span className="back-arrow">←</span> Back
