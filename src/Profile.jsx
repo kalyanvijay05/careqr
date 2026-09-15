@@ -330,6 +330,21 @@ function Profile({ onBack }) {
                     size={280}
                     level="M"
                   />
+                  <button
+  className="download-qr-button"
+  onClick={() => {
+    const canvas = document.querySelector('.qr-code canvas');
+
+    if (!canvas) return;
+
+    const link = document.createElement('a');
+    link.download = 'CareQR-Emergency-Code.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }}
+>
+  ↓ Download QR Code
+</button>
                 </div>
 
                 <div className="qr-instructions">
