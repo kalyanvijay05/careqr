@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+
 function Profile({ onBack }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -13,14 +14,17 @@ function Profile({ onBack }) {
   const [saved, setSaved] = useState(false);
   const [editing, setEditing] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  useEffect(() => {
-  const storedProfile = localStorage.getItem('careqrProfile');
+  const [showAbout, setShowAbout] = useState(false);
 
-  if (storedProfile) {
-    setFormData(JSON.parse(storedProfile));
-    setSaved(true);
-  }
-}, []);
+  useEffect(() => {
+    const storedProfile = localStorage.getItem('careqrProfile');
+
+    if (storedProfile) {
+      setFormData(JSON.parse(storedProfile));
+      setSaved(true);
+    }
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -29,240 +33,402 @@ function Profile({ onBack }) {
       [name]: value
     });
   };
-const handleSubmit = (event) => {
-  event.preventDefault();
 
-  localStorage.setItem(
-    'careqrProfile',
-    JSON.stringify(formData)
-  );
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  if (editing) {
-  setEditing(false);
-  setUpdateSuccess(true);
+    localStorage.setItem(
+      'careqrProfile',
+      JSON.stringify(formData)
+    );
 
-  setTimeout(() => {
-    setUpdateSuccess(false);
-  }, 3000);
-} else {
-  setSaved(true);
-}
-};
-if (saved && editing) {
-  return (
-    <div className="profile-page">
-      <div className="profile-container">
+    if (editing) {
+      setEditing(false);
+      setUpdateSuccess(true);
 
-        <button
-          className="back-button"
-          onClick={() => setEditing(false)}
-        >
-          <span className="back-arrow">←</span> Cancel
-        </button>
+      setTimeout(() => {
+        setUpdateSuccess(false);
+      }, 3000);
+    } else {
+      setSaved(true);
+    }
+  };
 
-        <div className="profile-header">
-          <div className="profile-icon">♥</div>
+  /* =====================================================
+     EDIT PROFILE
+     ===================================================== */
 
-          <h1>Edit Emergency Profile</h1>
+  if (saved && editing) {
+    return (
+      <div className="profile-page">
+        <div className="profile-container">
 
-          <p>
-            Update your emergency information below.
-          </p>
-        </div>
+          <button
+            className="back-button"
+            onClick={() => setEditing(false)}
+          >
+            <span className="back-arrow">←</span>
+            Cancel
+          </button>
 
-        <form
-          className="profile-form"
-          onSubmit={handleSubmit}
-        >
+          <div className="profile-header">
+            <div className="profile-icon">♥</div>
 
-          <div className="form-group">
-            <label>Full Name</label>
+            <span className="profile-eyebrow">
+              CAREQR / PROFILE
+            </span>
 
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-            />
+            <h1>Edit Emergency Profile</h1>
+
+            <p>
+              Keep your essential emergency information
+              accurate and ready when it matters.
+            </p>
           </div>
 
-          <div className="form-row">
-
-            <div className="form-group">
-              <label>Blood Group</label>
-
-              <select
-                name="bloodGroup"
-                value={formData.bloodGroup}
-                onChange={handleChange}
-              >
-                <option value="">Select blood group</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
+          <form
+            className="profile-form"
+            onSubmit={handleSubmit}
+          >
+            <div className="form-section-title">
+              Personal information
             </div>
 
             <div className="form-group">
-              <label>Emergency Contact</label>
+              <label>Full Name</label>
 
               <input
-                type="tel"
-                name="emergencyContact"
-                value={formData.emergencyContact}
+                type="text"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="Phone number"
+                placeholder="Enter your name"
               />
             </div>
 
+            <div className="form-row">
+              <div className="form-group">
+                <label>Blood Group</label>
+
+                <select
+                  name="bloodGroup"
+                  value={formData.bloodGroup}
+                  onChange={handleChange}
+                >
+                  <option value="">Select blood group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Emergency Contact</label>
+
+                <input
+                  type="tel"
+                  name="emergencyContact"
+                  value={formData.emergencyContact}
+                  onChange={handleChange}
+                  placeholder="Phone number"
+                />
+              </div>
+            </div>
+
+            <div className="form-section-title">
+              Medical information
+            </div>
+
+            <div className="form-group">
+              <label>Allergies</label>
+
+              <input
+                type="text"
+                name="allergies"
+                value={formData.allergies}
+                onChange={handleChange}
+                placeholder="Example: Penicillin, peanuts"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Medical Conditions</label>
+
+              <textarea
+                name="medicalConditions"
+                value={formData.medicalConditions}
+                onChange={handleChange}
+                rows="4"
+                placeholder="Example: Asthma, diabetes, etc."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Emergency Notes</label>
+
+              <textarea
+                name="emergencyNotes"
+                value={formData.emergencyNotes}
+                onChange={handleChange}
+                rows="3"
+                placeholder="Any important information for emergency responders"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              className="save-button"
+            >
+              Save Changes
+              <span>→</span>
+            </button>
+          </form>
+
+          <div className="privacy-note">
+            🔒 <strong>Emergency-use information only</strong>
+
+            <p>
+              Only share information that may help during an emergency.
+              Do not enter sensitive information such as passwords or
+              financial details.
+            </p>
           </div>
 
-          <div className="form-group">
-            <label>Allergies</label>
-
-            <input
-              type="text"
-              name="allergies"
-              value={formData.allergies}
-              onChange={handleChange}
-              placeholder="Example: Penicillin, peanuts"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Medical Conditions</label>
-
-            <textarea
-              name="medicalConditions"
-              value={formData.medicalConditions}
-              onChange={handleChange}
-              rows="4"
-              placeholder="Example: Asthma, diabetes, etc."
-            ></textarea>
-          </div>
-
-          <div className="form-group">
-            <label>Emergency Notes</label>
-
-            <textarea
-              name="emergencyNotes"
-              value={formData.emergencyNotes}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Any important information for emergency responders"
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            className="save-button"
-          >
-            Update Emergency Profile
-          </button>
-
-        </form>
-
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
+  /* =====================================================
+     SAVED PROFILE
+     ===================================================== */
 
   if (saved) {
     return (
       <div className="profile-page">
-        <div className="saved-profile-container">
 
-          <button className="back-button" onClick={onBack}>
-            <span className="back-arrow">←</span> Back
+        <div className="profile-container">
+
+          <button
+            className="back-button"
+            onClick={onBack}
+          >
+            <span className="back-arrow">←</span>
+            Back
           </button>
 
-          <div className="saved-profile-card">
-            {updateSuccess && (
-  <div className="update-success">
-    ✅ Profile updated successfully!
-  </div>
-)}
-            <button
-  className="edit-profile-button"
-  onClick={() => setEditing(true)}
->
-  ✏️ Edit Profile
-</button>
+          {updateSuccess && (
+            <div className="update-success">
+              ✓ Profile updated successfully!
+            </div>
+          )}
 
-            <div className="saved-profile-logo">
-              ♥
+          <div className="profile-dashboard">
+
+            {/* MAIN PROFILE */}
+
+            <div className="saved-profile-card">
+
+              <div className="profile-card-top">
+                <div className="saved-profile-logo">
+                  ♥
+                </div>
+
+                <div>
+                  <span className="profile-eyebrow">
+                    CAREQR ID
+                  </span>
+
+                  <h1>Emergency Profile</h1>
+
+                  <p>
+                    Essential information for emergency situations.
+                  </p>
+                </div>
+              </div>
+
+              <div className="profile-status">
+                <span></span>
+                Emergency profile active
+              </div>
+
+              <div className="saved-profile-name">
+                {formData.name || 'Unnamed User'}
+              </div>
+
+              <div className="profile-info-grid">
+
+                <div className="info-item highlight">
+                  <span>🩸 Blood Group</span>
+                  <strong>
+                    {formData.bloodGroup || 'Not provided'}
+                  </strong>
+                </div>
+
+                <div className="info-item">
+                  <span>⚠️ Allergies</span>
+                  <strong>
+                    {formData.allergies || 'None provided'}
+                  </strong>
+                </div>
+
+                <div className="info-item">
+                  <span>🏥 Medical Condition</span>
+                  <strong>
+                    {formData.medicalConditions || 'None provided'}
+                  </strong>
+                </div>
+
+                <div className="info-item">
+                  <span>📞 Emergency Contact</span>
+                  <strong>
+                    {formData.emergencyContact || 'Not provided'}
+                  </strong>
+                </div>
+
+              </div>
+
+              <div className="notes-box">
+                <span>📝 Emergency Notes</span>
+
+                <p>
+                  {formData.emergencyNotes ||
+                    'No additional notes provided.'}
+                </p>
+              </div>
+
+              {/* QR */}
+
+              <div className="qr-section">
+
+                <div className="qr-heading">
+                  <div>
+                    <span className="profile-eyebrow">
+                      EMERGENCY ACCESS
+                    </span>
+
+                    <h2>Your CareQR</h2>
+                  </div>
+
+                  <span className="qr-live">
+                    ● Active
+                  </span>
+                </div>
+
+                <p>
+                  Scan this code to access the emergency profile.
+                </p>
+
+                <div className="qr-code">
+                  <QRCodeCanvas
+                    value={`CAREQR|${formData.name}|${formData.bloodGroup}|${formData.emergencyContact}|${formData.allergies}|${formData.medicalConditions}|${formData.emergencyNotes}`}
+                    size={280}
+                    level="M"
+                  />
+                </div>
+
+                <div className="qr-instructions">
+                  <strong>
+                    📱 Keep your CareQR accessible
+                  </strong>
+
+                  <p>
+                    Save or print this QR code for emergency situations.
+                  </p>
+                </div>
+
+              </div>
+
             </div>
 
-            <h1>CareQR</h1>
+            {/* SETTINGS */}
 
-            <p className="saved-profile-title">
-              Emergency Profile
-            </p>
+            <aside className="profile-settings">
 
-            <div className="saved-profile-name">
-              {formData.name || 'Unnamed User'}
-            </div>
+              <div className="settings-header">
+                <span className="settings-icon">⚙</span>
 
-            <div className="info-item">
-              <span>Blood Group</span>
-              <strong>{formData.bloodGroup || 'Not provided'}</strong>
-            </div>
+                <div>
+                  <span className="profile-eyebrow">
+                    PROFILE
+                  </span>
 
-            <div className="info-item">
-              <span>Allergies</span>
-              <strong>{formData.allergies || 'None provided'}</strong>
-            </div>
+                  <h2>Settings</h2>
+                </div>
+              </div>
 
-            <div className="info-item">
-              <span>Medical Condition</span>
-              <strong>
-                {formData.medicalConditions || 'None provided'}
-              </strong>
-            </div>
+              <div className="settings-divider"></div>
 
-            <div className="info-item">
-              <span>Emergency Contact</span>
-              <strong>
-                {formData.emergencyContact || 'Not provided'}
-              </strong>
-            </div>
+              <button
+                className="settings-item"
+                onClick={() => setEditing(true)}
+              >
+                <span className="settings-item-icon">
+                  ✏️
+                </span>
 
-            <div className="notes-box">
-              <span>Emergency Notes</span>
-              <p>
-                {formData.emergencyNotes || 'No additional notes.'}
-              </p>
-            </div>
+                <div>
+                  <strong>Edit Profile</strong>
+                  <small>Update your information</small>
+                </div>
 
-            <div className="qr-section">
-  <h2>Your Emergency QR</h2>
+                <span className="settings-arrow">→</span>
+              </button>
 
-  <p>
-    Scan this QR code to access the emergency profile.
-  </p>
+              <button
+                className="settings-item"
+                onClick={() => setShowAbout(!showAbout)}
+              >
+                <span className="settings-item-icon">
+                  ℹ️
+                </span>
 
-  <div className="qr-code">
-   <QRCodeCanvas
-  value={`CAREQR|${formData.name}|${formData.bloodGroup}|${formData.emergencyContact}|${formData.allergies}|${formData.medicalConditions}|${formData.emergencyNotes}`}
-  size={280}
-  level="M"
-/>
-  </div>
+                <div>
+                  <strong>About CareQR</strong>
+                  <small>Learn about CareQR</small>
+                </div>
 
- <div className="qr-instructions">
-  <strong>📱 Your CareQR is ready</strong>
-  <p>
-    Save or print this QR code and keep it accessible
-    for emergency situations.
-  </p>
-</div>
-</div>
+                <span className="settings-arrow">
+                  {showAbout ? '↓' : '→'}
+                </span>
+              </button>
+
+              {showAbout && (
+                <div className="about-panel">
+                  <strong>About CareQR</strong>
+
+                  <p>
+                    CareQR is designed to make essential emergency
+                    information easier to access when someone may
+                    not be able to speak for themselves.
+                  </p>
+
+                  <p>
+                    Create a profile, generate your CareQR code,
+                    and keep it accessible for emergency situations.
+                  </p>
+                </div>
+              )}
+
+              <div className="settings-note">
+                <span>🔒</span>
+
+                <div>
+                  <strong>Privacy first</strong>
+
+                  <p>
+                    Only include information that may help
+                    during an emergency.
+                  </p>
+                </div>
+              </div>
+
+            </aside>
 
           </div>
 
@@ -271,30 +437,50 @@ if (saved && editing) {
     );
   }
 
-  return (
-    
-  <div className="profile-page">
-    <div className="profile-container"></div>
+  /* =====================================================
+     CREATE PROFILE
+     ===================================================== */
 
-        <button className="back-button" onClick={onBack}>
-          <span className="back-arrow">←</span> Back
+  return (
+    <div className="profile-page">
+
+      <div className="profile-container">
+
+        <button
+          className="back-button"
+          onClick={onBack}
+        >
+          <span className="back-arrow">←</span>
+          Back
         </button>
 
         <div className="profile-header">
-          <div className="profile-icon">♥</div>
+
+          <div className="profile-icon">
+            ♥
+          </div>
+
+          <span className="profile-eyebrow">
+            CAREQR / GET STARTED
+          </span>
 
           <h1>Create Emergency Profile</h1>
 
           <p>
-            Add important information that can help someone assist you
-            during an emergency.
+            Add essential information that can help someone
+            assist you during an emergency.
           </p>
+
         </div>
 
         <form
           className="profile-form"
           onSubmit={handleSubmit}
         >
+
+          <div className="form-section-title">
+            Personal information
+          </div>
 
           <div className="form-group">
             <label>Full Name</label>
@@ -344,6 +530,10 @@ if (saved && editing) {
 
           </div>
 
+          <div className="form-section-title">
+            Medical information
+          </div>
+
           <div className="form-group">
             <label>Allergies</label>
 
@@ -384,21 +574,28 @@ if (saved && editing) {
             type="submit"
             className="save-button"
           >
-            Save Emergency Profile
+            Create Emergency Profile
+            <span>→</span>
           </button>
 
         </form>
 
-       <div className="privacy-note">
-  🔒 <strong>Emergency-use information only</strong>
-      <p>
-        Only share information that may help during an emergency.
-        Do not enter sensitive information such as passwords or financial details.
-      </p>
-    </div>
-  </div>
-);
+        <div className="privacy-note">
+          🔒 <strong>Emergency-use information only</strong>
 
+          <p>
+            Only share information that may help during an emergency.
+            Do not enter sensitive information such as passwords or
+            financial details.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  );
 }
 
-export default Profile
+export default Profile;
+
+
