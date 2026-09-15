@@ -128,14 +128,14 @@ function Profile({ onBack }) {
               </div>
 
               <div className="form-group">
-                <label>Emergency Contact</label>
+                <label>Emergency Contact Number</label>
 
                 <input
                   type="tel"
                   name="emergencyContact"
                   value={formData.emergencyContact}
                   onChange={handleChange}
-                  placeholder="Phone number"
+                  placeholder="Enter emergency contact number"
                 />
               </div>
             </div>
@@ -413,22 +413,56 @@ function Profile({ onBack }) {
                 </span>
               </button>
 
-              {showAbout && (
-                <div className="about-panel">
-                  <strong>About CareQR</strong>
+             {showAbout && (
+  <div className="about-panel">
+    <div className="about-panel-header">
+      <span className="about-panel-icon">♥</span>
+      <div>
+        <strong>About CareQR</strong>
+        <small>Emergency information, made accessible.</small>
+      </div>
+    </div>
 
-                  <p>
-                    CareQR is designed to make essential emergency
-                    information easier to access when someone may
-                    not be able to speak for themselves.
-                  </p>
+    <p>
+      CareQR helps make essential emergency information
+      easier to access when someone may not be able to
+      speak for themselves.
+    </p>
 
-                  <p>
-                    Create a profile, generate your CareQR code,
-                    and keep it accessible for emergency situations.
-                  </p>
-                </div>
-              )}
+    <p>
+      Create your emergency profile, generate your CareQR
+      code, and keep it accessible for situations where
+      quick information may matter.
+    </p>
+
+    <div className="about-features">
+      <span>✓ Quick access</span>
+      <span>✓ Emergency focused</span>
+      <span>✓ Privacy aware</span>
+    </div>
+  </div>
+  
+)}
+
+<div className="about-team">
+  <span className="about-team-title">OUR TEAM</span>
+
+  <div className="team-member">
+    <span className="team-avatar">M</span>
+    <div>
+      <strong>M. Vijay Kalyan</strong>
+      <small>Team Member</small>
+    </div>
+  </div>
+
+  <div className="team-member">
+    <span className="team-avatar">K</span>
+    <div>
+      <strong>K. Maneesh</strong>
+      <small>Team Member</small>
+    </div>
+  </div>
+</div>
 
               <div className="settings-note">
                 <span>🔒</span>
@@ -532,14 +566,14 @@ function Profile({ onBack }) {
             </div>
 
             <div className="form-group">
-              <label>Emergency Contact</label>
+              <label>Emergency Contact Number</label>
 
               <input
                 type="tel"
                 name="emergencyContact"
                 value={formData.emergencyContact}
                 onChange={handleChange}
-                placeholder="Phone number"
+                placeholder="Enter emergency contact number"
               />
             </div>
 
